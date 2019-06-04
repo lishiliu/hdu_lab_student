@@ -16,14 +16,14 @@ export class SiderComponent {
       'route': '/index',
     },
     {
-      'icon': 'calendar',
-      'name': '本周上机课程',
-      'route': '/calendar'
-    },
-    {
       'icon': 'database',
       'name': '我的签到',
       'route': '/studentSignIn'
+    },
+    {
+      'icon': 'calendar',
+      'name': '我的课程',
+      'route': '/courses'
     }];
 
   constructor(public settings: SettingsService, private menuService: MenuService) {

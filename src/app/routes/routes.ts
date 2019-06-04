@@ -16,6 +16,10 @@ import {StudentSignInComponent} from './studentSignIn/studentSignIn.component';
 import {HistoricalRecordsComponent} from './studentSignIn/historicalRecords/historicalRecords.component';
 import {AddStudentComponent} from './studentSignIn/addStudent/addStudent.component';
 import {ShowStudentSignRecordComponent} from './studentSignIn/showStudentSignRecord/showStudentSignRecord.component';
+import {CoursesComponent} from './courses/courses.component';
+import {HistoricalCoursesComponent} from './courses/historicalcourses/historicalCourses.component';
+import {AddCourseComponent} from './courses/addCourse/addCourse.component';
+import {EditCourseComponent} from './courses/editCourse/editCourse.component';
 
 export const routes: Routes = [
     {path: 'login', component: LoginComponent, canLoad: [CanAuthProvide]},
@@ -26,6 +30,30 @@ export const routes: Routes = [
                 path: 'index', component: IndexComponent, canActivate: [CanAuthProvide],
                 data: {
                     breadcrumb: '首页'
+                }
+            },
+            {
+                path: 'courses', component: CoursesComponent, canActivate: [CanAuthProvide],
+                data: {
+                    breadcrumb: '课程管理'
+                }
+            },
+            {
+                path: 'courses/history', component: HistoricalCoursesComponent, canActivate: [CanAuthProvide],
+                data: {
+                    breadcrumb: '历史课程'
+                }
+            },
+            {
+                path: 'courses/add', component: AddCourseComponent, canActivate: [CanAuthProvide],
+                data: {
+                    breadcrumb: '添加课程'
+                }
+            },
+            {
+                path: 'courses/edit', component: EditCourseComponent, canActivate: [CanAuthProvide],
+                data: {
+                    breadcrumb: '编辑课程'
                 }
             },
             {
