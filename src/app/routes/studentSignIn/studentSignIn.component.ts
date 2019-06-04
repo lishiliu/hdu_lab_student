@@ -18,10 +18,11 @@ export class StudentSignInComponent implements OnInit {
     }
     validateForm: FormGroup;
     apiUrl = [
-        'class/lab/getClassByLabId', /*0获取本周课程*/
-        'studentSignIn/updateStatus', /*1删除课程*/
+        'studentSignIn/getCurrentSignTask', /*0获取签到任务*/
+        'studentSignIn/getSignCountToStudent', /*1删除课程*/
         'semester/getNowSemester', // 2
         'user/getUserByUserName',
+        'computer/getComputer'
     ];
     options = [
         { value: '2016', label: '2016' },
@@ -30,10 +31,10 @@ export class StudentSignInComponent implements OnInit {
         { value: '2019', label: '2019' },
     ];
     WEEK = ['日', '一', '二', '三', '四', '五', '六', '日'];
-    _value = ''; /*搜索内容*/
-    choice = 'all';
     courses = [];
     data = [];
+    undoCount;
+    doCount;
     // 获取学期
     nowSemester = {
         nowSemester: '',
@@ -55,23 +56,16 @@ export class StudentSignInComponent implements OnInit {
         }
         return hours;
     }
-    private getWeekHours(courses: any) {
-        let hours = 0;
-        for (let course of courses) {
-            hours += course.classNum.length;
-        }
-        return hours;
-    }
     private getHours(course: any) {
         return course.classNum.length * course.classWeek.length;
     }
     private _getData = () => {
         // 获取当前学期信息
         this.getSemester();
-        // 获取课程
-        this.studentSignInService.executeHttp(this.apiUrl[0], {labId: this._storage.get('labId')})
+        // 获取当前签到任务
+        this.studentSignInService.executeHttp(this.apiUrl[0], {studentId: this._storage.get('username')})
             .then((result: any) => {
-                const data = JSON.parse(result['_body'])['course'];
+                const data = JSON.parse(result['_body'])['currentSignTask'];
                 for (let i of data) {
                     i.expand = false;
                     // 获取教师信息
@@ -85,12 +79,36 @@ export class StudentSignInComponent implements OnInit {
                 }
                 this.courses = data;
             });
+        this.studentSignInService.executeHttp(this.apiUrl[1], {studentId: this._storage.get('username')})
+            .then((result: any) => {
+               this.undoCount = JSON.parse(result['_body'])['undoCount'];
+                this.doCount = JSON.parse(result['_body'])['doCount'];
+            });
     }
-    // 查看学生记录
-    showRecords(data: any) {
-        const str = JSON.stringify(data);
-        this._storage.set('signInCourse', str);
-        this.router.navigate(['/studentSignIn/show']);
+    // 签到
+    addSignInfo(data: any) {
+        this.studentSignInService.executeGET(this.apiUrl[4])
+            .then((result: any) => {
+                const res = JSON.parse(result['_body']);
+                if (res['result'] === 'success') {
+                    const str = JSON.stringify(res['NowComputer']);
+                    const str2 = JSON.stringify(res['labName']);
+                    this._storage.set('curComputer',str);
+                    this._storage.set('labName',str2);
+                    const str3 = JSON.stringify(data);
+                    this._storage.set('signInCourse', str3);
+                    this.router.navigate(['/studentSignIn/add']);
+                }else{
+                    this.info('警告',res['msg']);
+                    return;
+                }
+            });
+    }
+    info(title, contentTpl) {
+        this.confirmServ.info({
+            title: title,
+            content: contentTpl
+        });
     }
     // 获取历史课程
     currentModal;

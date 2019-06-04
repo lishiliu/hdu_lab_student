@@ -69,7 +69,7 @@ export const routes: Routes = [
             }, {
                 path: 'studentSignIn', component: StudentSignInComponent, canActivate: [CanAuthProvide],
                 data: {
-                    breadcrumb: '学生签到管理'
+                    breadcrumb: '我的签到'
                 }
             },
             {
@@ -81,7 +81,7 @@ export const routes: Routes = [
             {
                 path: 'studentSignIn/add', component: AddStudentComponent, canActivate: [CanAuthProvide],
                 data: {
-                    breadcrumb: '添加学生'
+                    breadcrumb: '签到'
                 }
             },
             {

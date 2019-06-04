@@ -18,17 +18,20 @@ export class AddStudentComponent implements OnInit {
     loadStatus: boolean;
     submitBtn = '提交';
     curl = [
-        'studentSignIn/addStudent', // 0 添加课程
-        'semester/getNowSemester' // 1获取当前学期
+        'studentSignIn/addStudentSign', // 0 签到
+        'semester/getNowSemester', // 1获取当前学期
+        'computer/getComputerByIp' // 2获取设备信息
     ];
     constructor(private _storage: SessionStorageService, private fb: FormBuilder, private router: Router,
                 private addStudentService: AddStudentService, private confirmServ: NzModalService) {
     }
+    nowComputer;
+    labName;
     nowSemester = {
         nowSemester: '',
         maxWeek: 17
     };
-    addStudentCourse;
+    addStudentSignCourse;
     getFormControl(name) {
         return this.validateForm.controls[name];
     }
@@ -41,8 +44,8 @@ export class AddStudentComponent implements OnInit {
     }
     success = () => {
         const modal = this.confirmServ.success({
-            title: '添加成功',
-            content: '1秒后回到学生签到管理'
+            title: '签到成功',
+            content: '1秒后回到我的签到管理'
         });
         const Route = this.router;
         setTimeout(function () {
@@ -51,15 +54,11 @@ export class AddStudentComponent implements OnInit {
         }, 1000);
     }
     _submitForm() {
-        let addClassId = '', addStudentId = '', addStudentName = '';
-        addClassId = this.validateForm.controls['addClassId'].value;
-        addStudentId = this.validateForm.controls['addStudentId'].value;
-        addStudentName = this.validateForm.controls['addStudentName'].value;
         const data = {
-            teacherId: this._storage.get('username'),
-            classId: addClassId,
-            studentId: addStudentId,
-            studentName: addStudentName
+            studentId: this._storage.get('username'),
+            classId: this.addStudentSignCourse.classId,
+            computerNo: this.nowComputer.computerNum,
+            labId: this.nowComputer.labId
         };
         this.addStudentService.executeHttp(this.curl[0], data)
             .then((result: any) => {
@@ -67,7 +66,7 @@ export class AddStudentComponent implements OnInit {
                 if (res['result'] === 'success') {
                     this.success();
                 } else {
-                    this.info('警告', '添加失败,请检查后重试！');
+                    this.info('警告',res['msg']);
                     return;
                 }
             });
@@ -83,17 +82,19 @@ export class AddStudentComponent implements OnInit {
             });
     }
     private _getData = () => {
-        // 获取课程c
-        this.addStudentCourse = JSON.parse(this._storage.get('addStudentClass'));
+        // 获取签到课程
+        this.addStudentSignCourse = JSON.parse(this._storage.get('signInCourse'));
+        this.nowComputer = JSON.parse(this._storage.get('curComputer'));
+        this.labName = JSON.parse(this._storage.get('labName'));
     }
     ngOnInit() {
         this.getData();
         this._getData();
         this.validateForm = this.fb.group({
-            addClassId: [null, [Validators.required]],
-            addClassName: [null, [Validators.required]],
-            addStudentId: [null, [Validators.required]],
-            addStudentName: [null, [Validators.required]],
+            signClassId: [null, [Validators.required]],
+            signClassName: [null, [Validators.required]],
+            signComputerNo: [null, [Validators.required]],
+            signLabName: [null, [Validators.required]],
         });
     }
 }

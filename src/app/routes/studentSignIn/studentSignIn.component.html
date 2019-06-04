@@ -1,5 +1,5 @@
 <div nz-row>
-  <h1>学生签到管理</h1>
+  <h1>我的签到</h1>
 </div>
 <div nz-row>
   <div nz-col [nzSpan]="22">
@@ -57,33 +57,21 @@
 </div>
 <div nz-row class="mycard" [nzType]="'flex'" [nzJustify]="'center'" [nzAlign]="'middle'">
   <div nz-col [nzSpan]="8">
-    <p>实验室本周课程</p>
-    <p>{{courses.length}}个课程</p>
+    <p>当前签到任务</p>
+    <p>{{courses.length}}个待签到</p>
   </div>
- <!-- <div nz-col [nzSpan]="8" class="se">
-    <p>本学期课时总数</p>
-    <p>{{this.getAllHours(courses)}}个学时</p>
-  </div>-->
+ <div nz-col [nzSpan]="8" class="se">
+    <p>本学期已完成签到</p>
+    <p>{{doCount}}个</p>
+  </div>
   <div nz-col [nzSpan]="8">
-    <p>本周课时总数</p>
-    <p>{{this.getWeekHours(courses)}}个学时</p>
+    <p>本学期未完成签到</p>
+    <p>{{undoCount}}个</p>
   </div>
 </div>
 <div nz-row>
   <div nz-col [nzSpan]="14">
-    <h2>本周课程列表</h2>
-  </div>
-  <div nz-col [nzSpan]="6" class="mbg">
-    <nz-radio-group  [(ngModel)]="choice" style="margin-right: 1em">
-      <label nz-radio-button [nzValue]="'all'" ><span>全部</span></label>
-      <label nz-radio-button [nzValue]="'ing'"><span>进行中</span></label>
-      <label nz-radio-button [nzValue]="'no'"><span>未开始</span></label>
-    </nz-radio-group>
-  </div>
-  <div nz-col [nzSpan]="3" class="sousuo">
-    <nz-input [nzType]="'search'" [nzPlaceHolder]="'请输入'"
-              [(ngModel)]="_value" style="width: 200px;margin-left: -2em" (nzOnSearch)="onSearch($event)" >
-    </nz-input>
+    <h2>待签到任务列表</h2>
   </div>
 </div>
 <!--<br>
@@ -105,7 +93,7 @@
         <th nz-th  [nzWidth]="'22%'"><span>课程号</span></th>
         <th nz-th [nzWidth]="'20%'"><span>课程名称</span></th>
         <th nz-th><span>课程学时</span></th>
-        <th nz-th><span>课程人数</span></th>
+        <th nz-th><span>截止时间</span></th>
         <th nz-th><span>教师名</span></th>
         <th nz-th><span>操作</span></th>
       </tr>
@@ -121,7 +109,7 @@
           <span>第{{data.classWeek}}周</span>
         </td>
         <td nz-td>{{this.getHours(data)}}</td>
-        <td nz-td>{{data.classPeoCount}}</td>
+        <td nz-td>{{data.endDate}}</td>
         <td nz-td><nz-popover [nzTitle]="'联系方式'">
           <span nz-popover>{{data.userNickname}}</span>
           <ng-template #nzTemplate>
@@ -131,7 +119,7 @@
         </nz-popover></td>
         <td nz-td>
             <span>
-              <a (click)="showRecords(data)">查看签到记录</a>
+              <a (click)="addSignInfo(data)">签到</a>
             </span>
         </td>
       </tr>

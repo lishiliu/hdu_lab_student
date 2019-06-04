@@ -21,22 +21,8 @@ export class SiderComponent {
       'route': '/calendar'
     },
     {
-      'icon': 'clock-circle-o',
-      'name': '上机预约管理',
-      'route': '/orders',
-      'submenu': [{
-        'icon': 'calendar',
-        'name': '已安排预约',
-        'route': '/arranged'
-      }, {
-          'icon': 'calendar',
-          'name': '未安排预约',
-          'route': '/disarranged'
-      }]
-    },
-    {
       'icon': 'database',
-      'name': '学生签到管理',
+      'name': '我的签到',
       'route': '/studentSignIn'
     }];
 
