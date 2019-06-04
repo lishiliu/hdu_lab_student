@@ -27,7 +27,7 @@ export class passwordEditComponent implements OnInit {
             }
         }
         if(this.validateForm.value.checkPassword==this.validateForm.value.password)
-          this.passwordEditService.executeHttp("/user/updatePassword",{userName: this._storage.get('username'),"oldPassword": this.validateForm.value.oldPassword, "newPassword": this.validateForm.value.password}).then((result: any) => {
+          this.passwordEditService.executeHttp("/student/updatePassword",{userName: this._storage.get('username'),"oldPassword": this.validateForm.value.oldPassword, "newPassword": this.validateForm.value.password}).then((result: any) => {
               let res = JSON.parse(result['_body']).result;
               if(res=="success"){
                   this._message.success('修改成功！');

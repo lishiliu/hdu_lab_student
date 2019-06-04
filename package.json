@@ -1,5 +1,5 @@
 {
-  "name": "hdu_lab_admin",
+  "name": "hdu_lab_student",
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
@@ -61,14 +61,14 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "description": "[hdu_lab-admin](https://github.com/lishiliu/hdu_lab-admin)是基于[ng-zorro-antd](https://github.com/NG-ZORRO/ng-zorro-antd)的机房预约系统。",
+  "description": "[hdu_lab-student](https://github.com/lishiliu/hdu_lab-student)是基于[ng-zorro-antd](https://github.com/NG-ZORRO/ng-zorro-antd)的机房预约系统。",
   "main": "karma.conf.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lishiliu/hdu_lab-admin.git"
+    "url": "git+https://github.com/lishiliu/hdu_lab-student.git"
   },
   "bugs": {
-    "url": "https://github.com/lishiliu/hdu_lab-admin/issues"
+    "url": "https://github.com/lishiliu/hdu_lab-student/issues"
   },
-  "homepage": "https://github.com/lishiliu/hdu_lab-admin#readme"
+  "homepage": "https://github.com/lishiliu/hdu_lab-student#readme"
 }

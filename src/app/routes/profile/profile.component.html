@@ -11,7 +11,7 @@
 <form nz-form [nzLayout]="'inline'" [formGroup]="validateForm" (ngSubmit)="_submitForm()">
 <div nz-row style="margin-top: 50px;">
   <div nz-col nzSpan="6" nzOffset="4" style="text-align: right;padding-right: 50px">
-    <h2>用户名：</h2>
+    <h2>学号：</h2>
   </div>
   <div nz-col nzSpan="6" style="line-height: 27px">
     {{this._storage.get("username")}}
@@ -19,18 +19,68 @@
 </div>
 <div nz-row style="margin-top: 30px;">
   <div nz-col nzSpan="6" nzOffset="4" style="text-align: right;padding-right: 50px">
-    <h2>昵称：</h2>
+    <h2>姓名：</h2>
   </div>
-  <div nz-col  nzSpan="6" *ngIf="!editMode" style="line-height: 27px">
-    <span>{{nickname}}</span>
-  </div>
-  <div nz-form-item *ngIf="editMode" nz-col nzSpan="7" nz-row style="display: inline-block">
-    <div nz-form-control  nz-col nzSpan="24">
-      <nz-input formControlName="newNickName" [nzPlaceHolder]="'请输入新的昵称'" [nzSize]="'large'" style="width:100%;"></nz-input>
-      <div nz-form-explain *ngIf="validateForm.controls.newNickName.dirty&&validateForm.controls.newNickName.hasError('required')" style="color: red">昵称不能为空!</div>
-    </div>
+  <div nz-col  nzSpan="6" style="line-height: 27px">
+    <span>{{studentName}}</span>
   </div>
 </div>
+  <div nz-row style="margin-top: 30px;">
+    <div nz-col nzSpan="6" nzOffset="4" style="text-align: right;padding-right: 50px">
+      <h2>班级：</h2>
+    </div>
+    <div nz-col  nzSpan="6" *ngIf="!editMode" style="line-height: 27px">
+      <span>{{classNo}}</span>
+    </div>
+    <div nz-form-item *ngIf="editMode" nz-col nzSpan="7" nz-row style="display: inline-block">
+      <div nz-form-control  nz-col nzSpan="24">
+        <nz-input formControlName="newClassNo" [nzPlaceHolder]="'请输入新的班级号'" [nzSize]="'large'"></nz-input>
+        <div nz-form-explain *ngIf="validateForm.controls.newClassNo.dirty&&validateForm.controls.newClassNo.hasError('required')" style="color: red">班级号不能为空!</div>
+      </div>
+    </div>
+  </div>
+  <div nz-row style="margin-top: 30px;">
+    <div nz-col nzSpan="6" nzOffset="4" style="text-align: right;padding-right: 50px">
+      <h2>专业：</h2>
+    </div>
+    <div nz-col  nzSpan="6" *ngIf="!editMode" style="line-height: 27px">
+      <span>{{majorIn}}</span>
+    </div>
+    <div nz-form-item *ngIf="editMode" nz-col nzSpan="7" nz-row style="display: inline-block">
+      <div nz-form-control  nz-col nzSpan="24">
+        <nz-input formControlName="newMajorIn" [nzPlaceHolder]="'请输入新的专业名称'" [nzSize]="'large'"></nz-input>
+        <div nz-form-explain *ngIf="validateForm.controls.newMajorIn.dirty&&validateForm.controls.newMajorIn.hasError('required')" style="color: red">专业名称不能为空!</div>
+      </div>
+    </div>
+  </div>
+  <div nz-row style="margin-top: 30px;">
+    <div nz-col nzSpan="6" nzOffset="4" style="text-align: right;padding-right: 50px">
+      <h2>学院：</h2>
+    </div>
+    <div nz-col  nzSpan="6" *ngIf="!editMode" style="line-height: 27px">
+      <span>{{college}}</span>
+    </div>
+    <div nz-form-item *ngIf="editMode" nz-col nzSpan="7" nz-row style="display: inline-block">
+      <div nz-form-control  nz-col nzSpan="24">
+        <nz-input formControlName="newCollege" [nzPlaceHolder]="'请输入新的专业名称'" [nzSize]="'large'"></nz-input>
+        <div nz-form-explain *ngIf="validateForm.controls.newCollege.dirty&&validateForm.controls.newCollege.hasError('required')" style="color: red">学院名称不能为空!</div>
+      </div>
+    </div>
+  </div>
+  <div nz-row style="margin-top: 30px;">
+    <div nz-col nzSpan="6" nzOffset="4" style="text-align: right;padding-right: 50px">
+      <h2>年级：</h2>
+    </div>
+    <div nz-col  nzSpan="6" *ngIf="!editMode" style="line-height: 27px">
+      <span>{{gradeNo}}</span>
+    </div>
+    <div nz-form-item *ngIf="editMode" nz-col nzSpan="7" nz-row style="display: inline-block">
+      <div nz-form-control  nz-col nzSpan="24">
+        <nz-input formControlName="newGradeNo" [nzPlaceHolder]="'请输入新的年级（如:2015级）'" [nzSize]="'large'"></nz-input>
+        <div nz-form-explain *ngIf="validateForm.controls.newGradeNo.dirty&&validateForm.controls.newGradeNo.hasError('required')" style="color: red">年级不能为空!</div>
+      </div>
+    </div>
+  </div>
 <div nz-row style="margin-top: 30px;">
   <div nz-col nzSpan="6" nzOffset="4" style="text-align: right;padding-right: 50px">
     <h2>邮箱：</h2>

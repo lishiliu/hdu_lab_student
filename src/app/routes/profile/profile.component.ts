@@ -17,15 +17,25 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 export class ProfileComponent implements OnInit {
     constructor(private _storage : SessionStorageService,private fb: FormBuilder, private ProfileService: ProfileService, private _message: NzMessageService) {
     }
-    nickname:string;
-    email:string;
-    phone:string;
+    stuId;
+    studentName;
+    classNo;
+    majorIn;
+    college;
+    gradeNo;
+    email;
+    phone;
     editMode=false;
     editText='编辑';
     getUserInfo(){
-        this.ProfileService.executeHttp("user/getUserByUserName",{"userName":this._storage.get("username")}).then((result: any) => {
-            let res = JSON.parse(result['_body'])["User1"];
-            this.nickname = res['userNickname'];
+        this.ProfileService.executeHttp('student/getStudentByStudentId',{ studentId:this._storage.get("username")}).then((result: any) => {
+            let res = JSON.parse(result['_body'])["Student"];
+            this.stuId = res['id'];
+            this.studentName = res['studentName'];
+            this.classNo = res['classNo'];
+            this.majorIn = res['majorIn'];
+            this.college = res['college'];
+            this.gradeNo = res['gradeNo'];
             this.email = res['email'];
             this.phone = res['phone'];
         })
@@ -33,9 +43,12 @@ export class ProfileComponent implements OnInit {
     edit(){
         if(!this.editMode){
             this.editText="返回";
+            this.validateForm.controls['newClassNo'].setValue(this.classNo);
+            this.validateForm.controls['newMajorIn'].setValue(this.majorIn);
+            this.validateForm.controls['newCollege'].setValue(this.college);
+            this.validateForm.controls['newGradeNo'].setValue(this.gradeNo);
             this.validateForm.controls['newEmail'].setValue(this.email);
             this.validateForm.controls['newPhone'].setValue(this.phone);
-            this.validateForm.controls['newNickName'].setValue(this.nickname);
 
         }else{
             this.editText="编辑";
@@ -57,11 +70,16 @@ export class ProfileComponent implements OnInit {
                 return;
             }
         }
-        this.ProfileService.executeHttp('user/updateUser', {
-            "userName":this._storage.get("username"),
-            "userNickname": this.validateForm.controls['newNickName'].value,
-            "email": this.validateForm.controls['newEmail'].value,
-            "phone": this.validateForm.controls['newPhone'].value
+        this.ProfileService.executeHttp('student/updateStudent', {
+            id:this.stuId,
+            studentId:this._storage.get("username"),
+            studentName: this.studentName,
+            classNo: this.validateForm.controls['newClassNo'].value,
+            majorIn: this.validateForm.controls['newMajorIn'].value,
+            college: this.validateForm.controls['newCollege'].value,
+            gradeNo: this.validateForm.controls['newGradeNo'].value,
+            email: this.validateForm.controls['newEmail'].value,
+            phone: this.validateForm.controls['newPhone'].value
         }).then((result: any) => {
             let res = JSON.parse(result['_body'])['result'];
             if(res=="success"){
@@ -78,9 +96,12 @@ export class ProfileComponent implements OnInit {
     ngOnInit() {
         this.getUserInfo();
         this.validateForm = this.fb.group({
+            newClassNo: [ this.classNo, [ Validators.required ] ],
+            newMajorIn: [ this.majorIn, [ Validators.required ] ],
+            newCollege: [ this.college, [ Validators.required ] ],
+            newGradeNo: [ this.gradeNo, [ Validators.required ] ],
             newPhone: [ this.phone, [ Validators.required ] ],
             newEmail: [ this.email, [ Validators.required ] ],
-            newNickName: [ this.nickname, [ Validators.required ] ]
         });
     }
 }

@@ -21,8 +21,7 @@ export class LoginComponent implements OnInit {
   loadStatus: boolean;
   loginBtn = '登录';
   apis = [
-      'user/adminLogin', // 0登录
-      'lab/getLabByAdminUserName', // 1 获取实验室ID
+      'student/login', // 0登录
   ];
 
   _submitForm() {
@@ -34,22 +33,17 @@ export class LoginComponent implements OnInit {
       this.loginBtn = '正在登录……';
       const userName = this.validateForm.value.userName;
       const password = this.validateForm.value.password;
-      this.loginService.executeHTTP(this.apis[0], {userName: userName, password: password})
+      this.loginService.executeHTTP(this.apis[0], {studentId: userName, password: password})
           .then(result => {
               let mess = JSON.parse(result['_body']).result;
               setTimeout(() => {
                   if (mess ===  1) {
                       this._storage.set('username', userName);
-                      this.http.executeHttp('/user/getUserByUserName', {userName: this._storage.get('username')})
+                      this.http.executeHttp('student/getStudentByStudentId', {studentId: this._storage.get('username')})
                           .then((res: any) => {
-                              let user = JSON.parse(res['_body'])['User1'];
-                              this._storage.set('nickname', user.userNickname);
+                              let student = JSON.parse(res['_body'])['Student'];
+                              this._storage.set('nickname', student.studentName);
                           });
-                      this.loginService.executeHTTP(this.apis[1], {adminUserName: this._storage.get('username')})
-                      .then(res => {
-                          const data = JSON.parse(res['_body'])['lab1List'];
-                          this._storage.set('labId', data[0].id);
-                      });
                       this.router.navigate(['']);
                   } else {
                       this.loadStatus = false;
