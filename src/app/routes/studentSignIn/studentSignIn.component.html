@@ -74,17 +74,16 @@
     <h2>待签到任务列表</h2>
   </div>
 </div>
-<!--<br>
+<br>
 <div nz-row [nzType]="'flex'" [nzJustify]="'start'">
   <div nz-col [nzSpan]="24" >
     <button nz-button [nzType]="'dashed'" style="width: inherit" >
-      <a  routerLink="add" routerLinkActive="active">
-      <i class="anticon anticon-plus"></i>
-      <span>添加学生</span></a>
+      <a  routerLink="show" routerLinkActive="active">
+      <span>查看本学期签到记录</span></a>
     </button>
   </div>
 </div>
-<br>-->
+<br>
 <div nz-row>
   <div nz-col>
     <nz-table #nzTable [nzDataSource]="courses" [nzPageSize]="5" [nzShowSizeChanger]="true" [nzShowTotal]="true" [nzTotal]="courses.length">

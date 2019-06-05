@@ -18,14 +18,16 @@ export class HistoricalRecordsComponent implements OnInit {
     }
     validateForm: FormGroup;
     apiUrl = [
-        'http://localhost:8080/LabManager/class/lab/getClassByLabIdAndSemester', /*0获取课程*/
-        'http://localhost:8080/LabManager/semester/getNowSemester', // 1
+        'http://localhost:8080/LabManager/studentSignIn/getPastedSignTaskBySemester', /*0获取签到信息*/
+        'http://localhost:8080/LabManager/studentSignIn/getSignCountToStudentBySemester', /*1获取签到人数信息*/
+        'http://localhost:8080/LabManager/semester/getNowSemester', // 2
+        'http://localhost:8080/LabManager/user/getUserByUserName'
     ];
 
     WEEK = ['日', '一', '二', '三', '四', '五', '六', '日'];
-    _value = ''; /*搜索内容*/
-    choice = 'all';
-    courses = [];
+    doCount;
+    undoCount;
+    signRecords = [];
     data = [];
     // 获取学期
     searchSemester = this._storage.get('historyCourses');
@@ -34,7 +36,7 @@ export class HistoricalRecordsComponent implements OnInit {
         maxWeek: 17
     };
     private getSemester() {
-        this.historicalRecordsService.executeGET(this.apiUrl[1])
+        this.historicalRecordsService.executeGET(this.apiUrl[2])
             .then((result: any) => {
                 const res = JSON.parse(result['_body']);
                 if (res['result'] === 'success') {
@@ -42,40 +44,32 @@ export class HistoricalRecordsComponent implements OnInit {
                 }
             });
     }
-    private getAllHours(courses: any) {
-        let hours = 0;
-        for (let course of courses) {
-            hours += course.classNum.length * course.classWeek.length;
-        }
-        return hours;
-    }
-    private getWeekHours(courses: any) {
-        let hours = 0;
-        for (let course of courses) {
-            hours += course.classNum.length;
-        }
-        return hours;
-    }
     private getHours(course: any) {
         return course.classNum.length * course.classWeek.length;
-    }
-    // 查看学生记录
-    showHistoryRecords(data: any) {
-        const str = JSON.stringify(data);
-        this._storage.set('signInCourse', str);
-        this.router.navigate(['/studentSignIn/show']);
     }
     private _getData = () => {
         // 获取当前学期信息
         this.getSemester();
-        // 获取课程
-        let data = {
-            labId: this._storage.get('labId'),
-            semester: this.searchSemester
-        }
-        this.historicalRecordsService.executeHttp(this.apiUrl[0], data)
+        this.historicalRecordsService.executeHttp(this.apiUrl[0], {studentId:this._storage.get('username'),semester:this.searchSemester})
             .then((result: any) => {
-                this.courses = JSON.parse(result['_body'])['course'];
+                const data = JSON.parse(result['_body'])['pastedSignTaskList'];
+                for (let i of data) {
+                    i.expand = false;
+                    // 获取教师信息
+                    this.historicalRecordsService.executeHttp(this.apiUrl[3], {userName: i.userName})
+                        .then((res: any) => {
+                            let temp = JSON.parse(res['_body'])['User1'];
+                            i.userNickname = temp.userNickname;
+                            i.email = temp.email;
+                            i.phone = temp.phone;
+                        });
+                }
+                this.signRecords = data;
+            });
+        this.historicalRecordsService.executeHttp(this.apiUrl[1], {studentId:this._storage.get('username'),semester:this.searchSemester})
+            .then((result: any) => {
+                this.undoCount = JSON.parse(result['_body'])['undoCount'];
+                this.doCount = JSON.parse(result['_body'])['doCount'];
             });
     }
     onSearch(event: string): void {

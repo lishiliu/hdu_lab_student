@@ -20,6 +20,7 @@ export class HistoricalCoursesComponent implements OnInit {
     apiUrl = [
         'http://localhost:8080/LabManager/class/semester/getclassbyusername', /*0获取课程*/
         'http://localhost:8080/LabManager/semester/getNowSemester', // 1
+        'http://localhost:8080/LabManager/user/getUserByUserName'
     ];
 
     WEEK = ['日', '一', '二', '三', '四', '五', '六', '日'];
@@ -69,7 +70,19 @@ export class HistoricalCoursesComponent implements OnInit {
         }
         this.historicalCoursesService.executeHttp(this.apiUrl[0], data)
             .then((result: any) => {
-                this.courses = JSON.parse(result['_body'])['course'];
+                const data = JSON.parse(result['_body'])['course'];
+                for (let i of data) {
+                    i.expand = false;
+                    // 获取教师信息
+                    this.historicalCoursesService.executeHttp(this.apiUrl[2], {userName: i.userName})
+                        .then((res: any) => {
+                            let temp = JSON.parse(res['_body'])['User1'];
+                            i.userNickname = temp.userNickname;
+                            i.email = temp.email;
+                            i.phone = temp.phone;
+                        });
+                }
+                this.courses = data;
             });
     }
     onSearch(event: string): void {

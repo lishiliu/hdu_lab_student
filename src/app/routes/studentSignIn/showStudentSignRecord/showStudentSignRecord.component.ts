@@ -18,9 +18,10 @@ export class ShowStudentSignRecordComponent implements OnInit {
     }
     validateForm: FormGroup;
     apiUrl = [
-        'http://localhost:8080/LabManager/studentSignIn/getSignRecordToTeacher', /*0获取签到信息*/
-        'http://localhost:8080/LabManager/studentSignIn/getSignCountToTeacher', /*0获取签到人数信息*/
-        'http://localhost:8080/LabManager/semester/getNowSemester', // 1
+        'http://localhost:8080/LabManager/studentSignIn/getPastedSignTaskThisSemester', /*0获取签到信息*/
+        'http://localhost:8080/LabManager/studentSignIn/getSignCountToStudent', /*1获取签到人数信息*/
+        'http://localhost:8080/LabManager/semester/getNowSemester', // 2
+        'http://localhost:8080/LabManager/user/getUserByUserName'
     ];
 
     WEEK = ['日', '一', '二', '三', '四', '五', '六', '日'];
@@ -44,16 +45,30 @@ export class ShowStudentSignRecordComponent implements OnInit {
                 }
             });
     }
+    private getHours(course: any) {
+        return course.classNum.length * course.classWeek.length;
+    }
     private _getData = () => {
         // 获取当前学期信息
         this.getSemester();
         // 获取课程c
-        this.signInCourse = JSON.parse(this._storage.get('signInCourse'));
-        this.showStudentSignRecordService.executeHttp(this.apiUrl[0], this.signInCourse)
+        this.showStudentSignRecordService.executeHttp(this.apiUrl[0], {studentId:this._storage.get('username')})
             .then((result: any) => {
-                this.signRecords = JSON.parse(result['_body'])['studentSignInfoToTeacherList'];
+                const data = JSON.parse(result['_body'])['pastedSignTaskList'];
+                for (let i of data) {
+                    i.expand = false;
+                    // 获取教师信息
+                    this.showStudentSignRecordService.executeHttp(this.apiUrl[3], {userName: i.userName})
+                        .then((res: any) => {
+                            let temp = JSON.parse(res['_body'])['User1'];
+                            i.userNickname = temp.userNickname;
+                            i.email = temp.email;
+                            i.phone = temp.phone;
+                        });
+                }
+                this.signRecords = data;
             });
-        this.showStudentSignRecordService.executeHttp(this.apiUrl[1], this.signInCourse)
+        this.showStudentSignRecordService.executeHttp(this.apiUrl[1], {studentId:this._storage.get('username')})
             .then((result: any) => {
                 this.undoCount = JSON.parse(result['_body'])['undoCount'];
                 this.doCount = JSON.parse(result['_body'])['doCount'];

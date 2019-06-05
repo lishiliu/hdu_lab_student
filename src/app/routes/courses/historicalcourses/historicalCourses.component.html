@@ -43,22 +43,21 @@
     </div>
 </div>
 <br>
-<div nz-row [nzType]="'flex'" [nzJustify]="'start'">
-    <div nz-col [nzSpan]="24">
+<div nz-row>
+    <div nz-col>
         <nz-table #nzTable [nzDataSource]="courses" [nzPageSize]="5" [nzShowSizeChanger]="true" [nzShowTotal]="true" [nzTotal]="courses.length">
             <thead nz-thead>
             <tr>
-                <th nz-th><span>编号</span></th>
-                <th nz-th [nzWidth]="'20%'"><span>课程名称</span></th>
                 <th nz-th  [nzWidth]="'22%'"><span>课程号</span></th>
+                <th nz-th [nzWidth]="'20%'"><span>课程名称</span></th>
                 <th nz-th><span>课程学时</span></th>
                 <th nz-th><span>课程人数</span></th>
-                <th nz-th><span>操作</span></th>
+                <th nz-th><span>教师名</span></th>
             </tr>
             </thead>
             <tbody nz-tbody>
             <tr nz-tbody-tr *ngFor="let data of nzTable.data">
-                <td nz-td>{{data.id}}</td>
+                <td nz-td>{{data.classId}}</td>
                 <td nz-td>
                     <span>{{data.className}}</span>
                     <br>
@@ -66,19 +65,17 @@
                     <br>
                     <span>第{{data.classWeek}}周</span>
                 </td>
-                <td nz-td>{{data.classId}}</td>
                 <td nz-td>{{this.getHours(data)}}</td>
                 <td nz-td>{{data.classPeoCount}}</td>
-                <td nz-td>
-            <span>
-              <a>编辑</a>
-              <span nz-table-divider></span>
-              <nz-popconfirm [nzTitle]="'确定删除吗？'" (nzOnConfirm)="null" (nzOnCancel)="null">
-                <a nz-popconfirm>删除</a>
-              </nz-popconfirm>
-            </span>
-                </td>
+                <td nz-td><nz-popover [nzTitle]="'联系方式'">
+                    <span nz-popover>{{data.userNickname}}</span>
+                    <ng-template #nzTemplate>
+                        <div><p>电话：{{data.phone}}</p>
+                            <p>邮箱：{{data.email}}</p></div>
+                    </ng-template>
+                </nz-popover></td>
             </tr>
             </tbody>
         </nz-table>
     </div>
+</div>

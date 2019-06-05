@@ -21,6 +21,7 @@ export class CoursesComponent implements OnInit {
         'class/getclassbyusername', /*0获取课程*/
         'class/deleteclass', /*1删除课程*/
         'semester/getNowSemester', // 2
+        'user/getUserByUserName'
     ];
     options = [
         { value: '2016', label: '2016' },
@@ -70,7 +71,19 @@ export class CoursesComponent implements OnInit {
         // 获取课程
         this.CoursesService.executeHttp(this.apiUrl[0], {userName: this._storage.get('username')})
             .then((result: any) => {
-                this.courses = JSON.parse(result['_body'])['course'];
+                const data = JSON.parse(result['_body'])['course'];
+                for (let i of data) {
+                    i.expand = false;
+                    // 获取教师信息
+                    this.CoursesService.executeHttp(this.apiUrl[3], {userName: i.userName})
+                        .then((res: any) => {
+                            let temp = JSON.parse(res['_body'])['User1'];
+                            i.userNickname = temp.userNickname;
+                            i.email = temp.email;
+                            i.phone = temp.phone;
+                        });
+                }
+                this.courses = data;
             });
     }
     // 编辑课程
