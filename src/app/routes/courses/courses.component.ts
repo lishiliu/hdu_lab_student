@@ -18,7 +18,7 @@ export class CoursesComponent implements OnInit {
     }
     validateForm: FormGroup;
     apiUrl = [
-        'class/getclassbyusername', /*0获取课程*/
+        'class/getClassByStudentId', /*0获取课程*/
         'class/deleteclass', /*1删除课程*/
         'semester/getNowSemester', // 2
         'user/getUserByUserName'
@@ -69,7 +69,7 @@ export class CoursesComponent implements OnInit {
         // 获取当前学期信息
         this.getSemester();
         // 获取课程
-        this.CoursesService.executeHttp(this.apiUrl[0], {userName: this._storage.get('username')})
+        this.CoursesService.executeHttp(this.apiUrl[0], {studentId: this._storage.get('username')})
             .then((result: any) => {
                 const data = JSON.parse(result['_body'])['course'];
                 for (let i of data) {

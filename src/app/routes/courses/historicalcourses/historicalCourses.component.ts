@@ -18,7 +18,7 @@ export class HistoricalCoursesComponent implements OnInit {
     }
     validateForm: FormGroup;
     apiUrl = [
-        'http://www.mrzhao14.cn/LabManager/class/semester/getclassbyusername', /*0获取课程*/
+        'http://www.mrzhao14.cn/LabManager/class/getClassByStudentIdAndSemester', /*0获取课程*/
         'http://www.mrzhao14.cn/LabManager/semester/getNowSemester', // 1
         'http://www.mrzhao14.cn/LabManager/user/getUserByUserName'
     ];
@@ -65,7 +65,7 @@ export class HistoricalCoursesComponent implements OnInit {
         this.getSemester();
         // 获取课程
         let data = {
-            userName: this._storage.get('username'),
+            studentId: this._storage.get('username'),
             semester: this.searchSemester
         }
         this.historicalCoursesService.executeHttp(this.apiUrl[0], data)
